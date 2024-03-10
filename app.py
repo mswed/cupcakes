@@ -20,7 +20,7 @@ def create_app(database='cupcakes'):
 
     @app.route('/api/cupcakes/<int:cid>')
     def get_cupcake(cid):
-        cupcake = Cupcake.query.get(cid)
+        cupcake = Cupcake.query.get_or_404(cid)
         return jsonify(cupcake=cupcake.to_dict())
 
     @app.route('/api/cupcakes', methods=['POST'])
@@ -34,6 +34,28 @@ def create_app(database='cupcakes'):
         db.session.commit()
 
         return (jsonify(cupcake=new_cupcake.to_dict()), 201)
+
+    @app.route('/api/cupcakes/<int:cid>', methods=['PATCH'])
+    def update_cupcake(cid):
+        data = request.json
+        cupcake = Cupcake.query.get_or_404(cid)
+        cupcake.flavor = data.get('flavor', cupcake.flavor)
+        cupcake.size = data.get('size', cupcake.size)
+        cupcake.rating = data.get('rating', cupcake.rating)
+        cupcake.image = data.get('image', cupcake.image)
+
+        db.session.commit()
+
+        return jsonify(cupcake=cupcake.to_dict())
+
+    @app.route('/api/cupcakes/<int:cid>', methods=['DELETE'])
+    def delete_cupcake(cid):
+        cupcake = Cupcake.query.get_or_404(cid)
+        db.session.delete(cupcake)
+        db.session.commit()
+
+        return jsonify(message='DELETED')
+
     return app
 
 
