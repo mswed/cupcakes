@@ -1,6 +1,8 @@
-from app import app
+from app import create_app
 from models import db, Cupcake
 
+app = create_app()
+app.app_context().push()
 
 db.drop_all()
 db.create_all()
