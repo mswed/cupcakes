@@ -1,11 +1,10 @@
 from unittest import TestCase
 
-from app import app
+from app import create_app
 from models import db, Cupcake
 
-# Use test database and don't clutter tests with SQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes_test'
-app.config['SQLALCHEMY_ECHO'] = False
+app = create_app('cupcakes_test')
+app.app_context().push()
 
 # Make Flask errors be real errors, rather than HTML pages with error info
 app.config['TESTING'] = True
