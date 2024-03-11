@@ -1,6 +1,8 @@
 """Flask app for Cupcakes"""
 from flask import Flask, render_template, jsonify, request
 from models import db, connect_db, Cupcake
+
+
 def create_app(database='cupcakes'):
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql:///{database}'
@@ -8,6 +10,9 @@ def create_app(database='cupcakes'):
 
     connect_db(app)
 
+    @app.route('/')
+    def get_index():
+        return render_template('index.html')
     @app.route('/api/cupcakes')
     def list_cupcakes():
         """
